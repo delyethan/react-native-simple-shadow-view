@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { requireNativeComponent, Platform, View } from 'react-native';
 
 const RNTShadowView = requireNativeComponent('RNTShadowView', ShadowView);
 
 const ShadowView = (props) => {
   if (Platform.OS === 'ios') {
-    return <View {...this.props}/>
+    return <View {...props} />
   }
-  const { style } = this.props || {};
+  const { style } = props || {};
   let flattenedStyle = {};
   if (Array.isArray(style)) {
     style.map((item) => {
@@ -38,13 +38,13 @@ const ShadowView = (props) => {
     borderBottomEndRadius
   } = flattenedStyle;
   if (!shadowRadius || shadowOpacity === 0) {
-    return <View {...this.props}/>
+    return <View {...props} />
   }
 
   const { width: shadowOffsetX, height: shadowOffsetY } = shadowOffset || {}
   return (
     <RNTShadowView
-      {...this.props}
+      {...props}
       style={[flattenedStyle]}
       borderWidth={borderWidth}
       borderColor={borderColor !== undefined ? borderColor : 'black'}
@@ -60,7 +60,7 @@ const ShadowView = (props) => {
       shadowOpacity={(shadowOpacity !== undefined ? shadowOpacity : 0)}
       shadowRadius={(shadowRadius !== undefined ? shadowRadius : 2.8)}
     >
-      {this.props.children}
+      {props.children}
     </RNTShadowView>
   )
 }
