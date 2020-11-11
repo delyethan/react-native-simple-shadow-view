@@ -204,11 +204,13 @@ public class ShadowView extends ViewGroup {
         float right = rect.right;
         float bottom = rect.bottom;
         Path path = new Path();
+        path.reset();
 
         if (tl < 0) tl = 0;
         if (tr < 0) tr = 0;
         if (br < 0) br = 0;
         if (bl < 0) bl = 0;
+
         float width = right - left;
         float height = bottom - top;
 
@@ -221,46 +223,11 @@ public class ShadowView extends ViewGroup {
         float blBottom = bl > width / 2 ? width / 2 : bl;
         float blLeft = bl > height / 2 ? height / 2 : bl;
 
-        float topWidthMinusCorners = (width - tlTop - trTop);
-        float bottomWidthMinusCorners = (width - blBottom - brBottom);
-        float leftHightMinusCorners = (height - tlLeft - blLeft);
-        float rightHightMinusCorners = (height - trRight - brRight);
-
-        path.moveTo(right, top + trRight);
-        if (tr > 0)
-            path.rQuadTo(0, -trRight, -trTop, -trRight);//top-right corner
-        else{
-            path.rLineTo(0, -trRight);
-            path.rLineTo(-trTop,0);
-        }
-        path.rLineTo(-topWidthMinusCorners, 0);
-
-        if (tl > 0)
-            path.rQuadTo(-tlTop, 0, -tlTop, tlLeft); //top-left corner
-        else{
-            path.rLineTo(-tlTop, 0);
-            path.rLineTo(0,tlLeft);
-        }
-        path.rLineTo(0, leftHightMinusCorners);
-
-        if (bl > 0)
-            path.rQuadTo(0, blLeft, blBottom, blLeft);//bottom-left corner
-        else{
-            path.rLineTo(0, blLeft);
-            path.rLineTo(blBottom,0);
-        }
-        path.rLineTo(bottomWidthMinusCorners, 0);
-
-        if (br > 0)
-            path.rQuadTo(brBottom, 0, brBottom, -brRight); //bottom-right corner
-        else{
-            path.rLineTo(brBottom,0);
-            path.rLineTo(0, -brRight);
-        }
-        path.rLineTo(0, -bottomWidthMinusCorners);
+        float radii[] = {tlTop, tlLeft, trTop, trRight, brRight, brBottom, blBottom, blLeft};
+        path.addRoundRect(rect, radii, Path.Direction.CW);
 
         path.close();//Given close, last lineto can be removed.
-
+        
         return path;
     }
 }
